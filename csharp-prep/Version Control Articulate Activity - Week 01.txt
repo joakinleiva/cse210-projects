@@ -1,0 +1,19 @@
+Joaquin Leiva - CSE 210
+
+
+For me, version control is a tool to helps us analyze, test and improve our code through time.
+
+One of its benefits is that it helps us control and know who did what on a
+team or project.
+
+To illustrate this concept, I will use the example of an events programming team
+at a Video Game Company. The ones in charge of programming the events after, 
+for example, a gun makes a shot, can add some extra features after testing the
+shot functions. For example, if another player gets shot, they just die. After 
+a team meeting, the team concluded that the player killed could have
+been carrying some equipment (guns, health, etc). So, after some changes in the
+classes and code the player who gets shot still dies, but now the equipment that
+he or she was carrying appears on the floor, for someone else to pick them.
+
+This tool mostly uses a terminal and commands to work with. One of those is
+git command push, which allows syncing both local and online repositories.
