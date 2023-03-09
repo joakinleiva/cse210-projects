@@ -1,26 +1,20 @@
 using System;
 
-
-namespace DailyRoutine
-{
     class Program
     {
-        static List<Answer> answers = new List<Answer>();
+        static List<Entry> answers = new List<Entry>();
         static Random random = new Random();
 
         static void Main(string[] args)
         {
-            // Using a while is better for me since it will continu to evalute until false is reached.
+            // Using a while is better for me since it will continue to evalute until false is reached.
             while (true)
             {
                 //Add some style to titles, just for fun
                 //Menu items
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine(" ");
                 Console.WriteLine("Please select one option:");
                 Console.ResetColor();
-                
-                
                 Console.WriteLine(" ");
                 Console.WriteLine("1. Write");
                 Console.WriteLine("2. Display");
@@ -38,14 +32,14 @@ namespace DailyRoutine
 
                 if (option == 1)
                 {
-                    string question = GetRandomQuestion(questions);
+                    string question = QuestionGenerator.GenerateRandomQuestion(); // Connect with generator
                     
                     Console.WriteLine(question);
                     
                     Console.WriteLine("");
                     string response = Console.ReadLine();
                     Console.WriteLine(" ");
-                    answers.Add(new Answer(question, response));
+                    answers.Add(new Entry(question, response));
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Answer saved.");
                     Console.WriteLine("----------------------");
@@ -61,7 +55,7 @@ namespace DailyRoutine
                     Console.WriteLine(" ");
                     foreach (var answer in answers)
                     {
-                        Console.WriteLine($"{answer.Timestamp}: {answer.Question} - {answer.Response}");
+                        Console.WriteLine($"{answer.Time}: {answer.Question} - {answer.Response}");
                     }
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(" ");
@@ -75,8 +69,8 @@ namespace DailyRoutine
                     Console.WriteLine("Insert the name of the file you want to load: ");
                     Console.WriteLine(" ");
                     Console.ResetColor();
-                    string fileName = Console.ReadLine();
-                    LoadAnswersFromFile(fileName);
+                    string nameOfTheFile = Console.ReadLine();
+                    LoadAnswersFromFile(nameOfTheFile);
                 }
                 else if (option == 4)
                 {
@@ -84,8 +78,8 @@ namespace DailyRoutine
                     Console.WriteLine("Insert the name of the file you want to save:");
                     Console.WriteLine(" ");
                     Console.ResetColor();
-                    string fileName = Console.ReadLine();
-                    SaveAnswersToFile(fileName);
+                    string nameOfTheFile = Console.ReadLine();
+                    SaveAnswersToFile(nameOfTheFile);
                 }
                 else if (option == 5)
                 {
@@ -101,27 +95,13 @@ namespace DailyRoutine
                 }
             }
         }
-        //Add some questions to be chosen from
-        static string[] questions = new string[]
-        {
-            "What did you do today?",
-            "What was the best part of your day?",
-            "Did you see the hand of God today? Why?",
-            "Did you learn anything new today?",
-            "What are you looking forward to tomorrow?"
-        };
-        //Rndom method for picking questions.
-        static string GetRandomQuestion(string[] questions)
-        {
-            int index = random.Next(0, questions.Length);
-            return questions[index];
-        }
+        
         //Checking file
-        static void LoadAnswersFromFile(string fileName)
+        static void LoadAnswersFromFile(string nameOfTheFile)
         {
-            if (File.Exists(fileName))
+            if (File.Exists(nameOfTheFile))
             {
-                using (StreamReader reader = new StreamReader(fileName))
+                using (StreamReader reader = new StreamReader(nameOfTheFile))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -129,10 +109,10 @@ namespace DailyRoutine
                         string[] parts = line.Split('|');
                         if (parts.Length == 3)
                         {
-                            DateTime timestamp = DateTime.Parse(parts[0]);
+                            DateTime time = DateTime.Parse(parts[0]);
                             string question = parts[1];
                             string response = parts[2];
-                            answers.Add(new Answer(question, response, timestamp));
+                            answers.Add(new Entry(question, response, time));
                         }
                     }
                 }
@@ -151,13 +131,13 @@ namespace DailyRoutine
             }
         }
 
-        static void SaveAnswersToFile(string fileName)
+        static void SaveAnswersToFile(string nameOfTheFile)
         {
-            using (StreamWriter writer = new StreamWriter(fileName))
+            using (StreamWriter writer = new StreamWriter(nameOfTheFile))
             {
                 foreach (var answer in answers)
                 {
-                    writer.WriteLine($"{answer.Timestamp}|{answer.Question}|{answer.Response}");
+                    writer.WriteLine($"{answer.Time}|{answer.Question}|{answer.Response}");
                 }
             }
             Console.ForegroundColor = ConsoleColor.Green;
@@ -168,25 +148,3 @@ namespace DailyRoutine
     
         }
     }
-
-    class Answer
-    {
-        public DateTime Timestamp { get; private set; }
-        public string Question { get; private set; }
-        public string Response { get; private set; }
-
-        public Answer(string question, string response)
-        {
-            Timestamp = DateTime.Now;
-            Question = question;
-            Response = response;
-        }
-
-        public Answer(string question, string response, DateTime timestamp)
-        {
-            Timestamp = timestamp;
-            Question = question;
-            Response = response;
-        }
-    }
-}
